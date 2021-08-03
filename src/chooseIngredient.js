@@ -30,9 +30,11 @@ export default function chooseIngredient(ingredients, recipes) {
     });
     container.addEventListener('click', function (e) {
         if (e.target.hasAttribute('data-delete')) {
-            const index = selected.findIndex(ingredient => ingredient.id === Number(e.target.getAttribute('data-delete')));
+            const targetIngredientId = Number(e.target.getAttribute('data-delete'));
+            const index = selected.findIndex(ingredient => ingredient.id === targetIngredientId);
             selected.splice(index, 1);
-            e.target.parentElement.innerHTML = '';
+            const ingredientContainer = document.getElementById(targetIngredientId);
+            ingredientContainer.parentNode.removeChild(ingredientContainer);
             if (selected.length === 0) {
                 buttonFind.classList.add('hide');
             }

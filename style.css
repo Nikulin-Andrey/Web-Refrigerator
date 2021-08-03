@@ -8,6 +8,7 @@ html, body {
     height: 100%;
     font-family: Montserrat, Tahoma, Geneva, Verdana, sans-serif;
 }
+
 .main {
     background: url(img/backgroung.jpg);
     background-attachment: fixed;
@@ -96,8 +97,30 @@ html, body {
 .arrow {
     width: 40px;
 }
+#selected_ingredients {
+    align-self: center;
+    margin: 0 auto;
+    background-color: white;
+    border-radius: 40px;
+    display: flex;
+    padding: 15px 0 7px 0;
+    max-width: 45%;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
+#selected_ingredients .selected {
+    background-color: #87C1C5;
+    border-radius: 40px;
+    padding: 10px 25px;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 8px;
+}
+.material-icons.md-18 { font-size: 18px; }
 #add, .deliter {
     cursor: pointer;
+
 }
 .ingredients_container {
     background: linear-gradient(to right bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.3));
@@ -127,14 +150,6 @@ html, body {
     color: whitesmoke;
     background: linear-gradient(to right bottom, rgb(204, 109, 109), rgba(204, 109, 109, 0.8));
 }
-.selected {
-    margin-bottom: 5px;
-}
-.selected span {
-    background: linear-gradient(to right bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.3));
-    padding: 3px;
-    border-radius: 10px;
-}
 .hide {
     display: none;
 }
@@ -154,13 +169,7 @@ html, body {
     font-weight: 500;
     margin: auto;
 }
-#selected_ingredients {
-    align-self: center;
-    margin: 0 auto;
-    background-color: white;
-    border-radius: 40px;
-    padding: 15px;
-}
+
 
 #find {
     margin:10px 0;

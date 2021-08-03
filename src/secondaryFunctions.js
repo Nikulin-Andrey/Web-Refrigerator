@@ -29,12 +29,14 @@ function addIngredient(selected, ingredients, selectMass, container, selectIngre
         ...ingredients.find(ingredient => selectIngredient.value === ingredient.name),
         mass: Number(selectMass.value)
     });
+    const newIngredientId = selected[selected.length - 1].id;
     container.insertAdjacentHTML('beforeend', `
-        <p class="selected">${selectIngredient.value}: <span>${Number(selectMass.value)} грамм</span> 
-            <button data-delete="${selected[selected.length - 1].id}" class="deliter">
-                Удалить
-            </button>
-        </p>
+        <div class="selected" id="${newIngredientId}">
+            ${selectIngredient.value}: ${Number(selectMass.value)} 
+            <span data-delete="${newIngredientId}" class="material-icons md-18 deliter">
+                close
+            </span>
+        </div>
     `);
     if (selected.length > 0) {
         buttonFind.classList.remove('hide');
