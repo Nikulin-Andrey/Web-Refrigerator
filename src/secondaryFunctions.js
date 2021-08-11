@@ -1,4 +1,4 @@
-import { renderDayRecipes } from './renderFunctions';
+import { renderRandomRecipes } from './renderFunctions';
 import loadJSON from './loadJSON';
 
 function cleanInputs(mass, ingredient) {
@@ -82,6 +82,6 @@ function setRandomRecipeOpening() {
 }
 async function loadRandomRecipe() {
     const randomRecipe = await loadJSON('https://www.themealdb.com/api/json/v1/1/random.php');
-    renderDayRecipes(randomRecipe);
+    renderRandomRecipes(randomRecipe);
 }
 export { cleanInputs, isCorrectInputs, addIngredient, isAllRecipes, setRecipeOpening, setRandomRecipeOpening, loadRandomRecipe };

@@ -53,7 +53,7 @@ function renderDropDownIngredientList(ingredients) {
         `);
     });
 }
-function renderDayRecipes(recipe) {
+function renderRandomRecipes(recipe) {
     const container = document.getElementById('random_recipe');
     container.innerHTML = '';
     container.insertAdjacentHTML('beforeend', `
@@ -102,14 +102,4 @@ function renderDayRecipes(recipe) {
     closeRecipe.addEventListener('click', () => {container.classList.remove('open')});
     reloadRecipe.addEventListener('click', loadRandomRecipe);
 }
-export { renderRecipes, renderDropDownIngredientList, renderDayRecipes };
-{/* <h2>${recipe.meals[0].strMeal}</h2>
-    <div class="day_recipe_info">
-        <p>${recipe.meals[0].strInstructions}</p>
-
-        <div class="day_ingredients_container">
-            <h3>Ингредиенты:</h3>
-            <ul></ul>
-        </div>
-    </div> 
-container.lastElementChild.lastElementChild.lastElementChild*/}
+export { renderRecipes, renderDropDownIngredientList, renderRandomRecipes };
