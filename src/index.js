@@ -1,15 +1,14 @@
-import {renderRecipes, renderDayRecipes} from './renderFunctions.js';
+import {renderRecipes} from './renderFunctions.js';
 import chooseIngredient from './chooseIngredient.js';
+import {setRandomRecipeOpening} from './secondaryFunctions';
 import loadJSON from './loadJSON';
 
 async function initApp() {
     const allIngredients = await loadJSON('./ingredients.json');
     const recipes = await loadJSON('./recipes.json');
-    
     renderRecipes(recipes, allIngredients);
     chooseIngredient(allIngredients, recipes);
-    const dayRecipe = await loadJSON('https://www.themealdb.com/api/json/v1/1/random.php');
-    renderDayRecipes(dayRecipe);
+    setRandomRecipeOpening();
 }
 
 initApp();
