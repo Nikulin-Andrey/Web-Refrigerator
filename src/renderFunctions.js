@@ -1,11 +1,26 @@
-import {setRecipeOpening, loadRandomRecipe} from './secondaryFunctions.js';
+import { setRecipeOpening, loadRandomRecipe } from './secondaryFunctions.js';
+import Swiper from 'swiper';
+import SwiperCore, { Navigation, Pagination } from 'swiper/core';
+import 'swiper/swiper-bundle.css';
 
-function renderRecipes(recipes, allIngredients) {
-    const container = document.getElementById('recipes_container');
+function renderRecipes(recipes, allIngredients, suitable = true) {
+    const sliderRecipesContainer = document.getElementById('recipes_container_slider');
+    const recipesContainer = document.getElementById('recipes_container');
+    recipesContainer.innerHTML = '';
     if (recipes.length > 0) {
         recipes.forEach(function (recipe, index) {
-            container.insertAdjacentHTML('beforeend', `
-        <div class="recipe">
+            sliderRecipesContainer.insertAdjacentHTML('beforeend', `
+        <div class="recipe_slide swiper-slide">
+            <div class="slide_recipe_content" data-index="${index}">
+                <h3>${recipe.name}${suitable ? '' : '<br><span>Немного не подходит</span>'}</h3>
+                <div class="slide_recipe_image_container">
+                    <img src="${recipe.img}">
+                </div>
+            </div>
+        </div>
+        `);
+            recipesContainer.insertAdjacentHTML('beforeend', `
+        <div class="recipe" id="recipe${index}">
             <div class="recipe_content">
                 <div class="recipe_exit">
                     <img src="img/arrow.svg" alt="exit_recipe" class="arrow">
@@ -39,11 +54,36 @@ function renderRecipes(recipes, allIngredients) {
             `);
             });
         });
-        const recipeContainers = container.querySelectorAll('.recipe');
+        const recipeContainers = container.querySelectorAll('.slide_recipe_content');
         setRecipeOpening(recipeContainers);
     } else {
-        container.innerHTML = '<h3>Ничего не найдено</h3>'
+        const oldNotFind = document.getElementById('not_find');
+        if(!oldNotFind) {
+            const notFind = document.createElement('div');
+            notFind.setAttribute('id', 'not_find');
+            notFind.innerHTML = '<h2>Ничего не найдено</h2>';
+            const showAll = document.getElementById('show_all').parentElement;
+            showAll.parentNode.insertBefore(notFind, showAll);
+        }
     }
+    SwiperCore.use([Navigation, Pagination]);
+    const swiper = new Swiper('.swiper-container', {
+        loop: false,
+        slidesPerView: 3,
+        spaceBetween: 30,
+
+        // If we need pagination
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true
+        },
+
+        // Navigation arrows
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+    });
 }
 function renderDropDownIngredientList(ingredients) {
     const list = document.getElementById('ingredient_selection');
@@ -55,6 +95,7 @@ function renderDropDownIngredientList(ingredients) {
 }
 function renderRandomRecipes(recipe) {
     const container = document.getElementById('random_recipe');
+    const body = document.getElementsByTagName('body');
     container.innerHTML = '';
     container.insertAdjacentHTML('beforeend', `
     <div class="recipe_content">
@@ -99,7 +140,10 @@ function renderRandomRecipes(recipe) {
             `);
         }
     }
-    closeRecipe.addEventListener('click', () => {container.classList.remove('open')});
+    closeRecipe.addEventListener('click', () => {
+        container.classList.remove('open');
+        body[0].classList.remove('noscroll');
+    });
     reloadRecipe.addEventListener('click', loadRandomRecipe);
 }
 export { renderRecipes, renderDropDownIngredientList, renderRandomRecipes };

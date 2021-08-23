@@ -2,8 +2,7 @@ import {renderRecipes} from './renderFunctions.js';
 import {isAllRecipes} from './secondaryFunctions.js';
 
 export default function getSuitableRecipes(selectedIngredients, recipes) {
-    const container = document.getElementById('recipes_container');
-    console.log(selectedIngredients);
+    const container = document.getElementById('recipes_container_slider');
     const suitableRecipes = [], exactleSuitableRecipes = [];
     let ingredient = {},
         suitable = true,
@@ -12,7 +11,7 @@ export default function getSuitableRecipes(selectedIngredients, recipes) {
         suitable = true;
         exactleSuitable = true;
         recipe.ingredients.forEach(function (recipeIngredient) {
-            ingredient = selectedIngredients.find(ingredient => ingredient.id === recipeIngredient.id);
+            ingredient = selectedIngredients.find(selectedIngredient => selectedIngredient.id === recipeIngredient.id);
             if (!ingredient) {
                 suitable = false;
                 exactleSuitable = false;
@@ -35,14 +34,16 @@ export default function getSuitableRecipes(selectedIngredients, recipes) {
         }
     })
     container.innerHTML = '';
-    console.log(suitableRecipes, exactleSuitableRecipes)
     if(suitableRecipes.length > 0) {
-        container.insertAdjacentHTML('beforeend', `<h2>Полностью подходят</h2>`);
-        renderRecipes(suitableRecipes, selectedIngredients);
+        suitable = true;
+        renderRecipes(suitableRecipes, selectedIngredients, suitable);
     }
     if (exactleSuitableRecipes.length > 0) {
-        container.insertAdjacentHTML('beforeend', `<h2>Частично подходят</h2>`);
-        renderRecipes(exactleSuitableRecipes, selectedIngredients);
+        suitable = false;
+        renderRecipes(exactleSuitableRecipes, selectedIngredients, suitable);
+    }
+    if(suitableRecipes.length === 0 && exactleSuitableRecipes.length === 0) {
+        renderRecipes(suitableRecipes, selectedIngredients, suitable);
     }
     isAllRecipes(suitableRecipes, recipes);
 }

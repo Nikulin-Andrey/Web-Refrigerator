@@ -6,16 +6,18 @@ function cleanInputs(mass, ingredient) {
     ingredient.value = "";
 }
 function isCorrectInputs(selected, selectIngredient, selectMass, ingredients) {
-    if (selected.find(selectedItem => selectedItem.name === selectIngredient.value)) {
-        alert(`ингредиент ${selectIngredient.value} уже был выбран`);
+    const selectedIngredient = selectIngredient.value.toLowerCase();
+    console.log(selectedIngredient)
+    if (selected.find(selectedItem => selectedItem.name === selectedIngredient)) {
+        alert(`ингредиент ${selectedIngredient} уже был выбран`);
         return false;
     }
     if (isNaN(selectMass.value)) {
         alert(`"${selectMass.value}" это не число, пожалуйста введите число`);
         return false;
     }
-    if (!ingredients.find(ingredient => ingredient.name === selectIngredient.value)) {
-        alert(`Ингредиента "${selectIngredient.value}" не существует`);
+    if (!ingredients.find(ingredient => ingredient.name === selectedIngredient)) {
+        alert(`Ингредиента "${selectedIngredient}" не существует`);
         return false;
     }
     if (Number(selectMass.value) < 0) {
@@ -28,14 +30,15 @@ function isCorrectInputs(selected, selectIngredient, selectMass, ingredients) {
     return true;
 }
 function addIngredient(selected, ingredients, selectMass, container, selectIngredient, buttonFind) {
+    const selectedIngredient = selectIngredient.value.toLowerCase();
     selected.push({
-        ...ingredients.find(ingredient => selectIngredient.value === ingredient.name),
+        ...ingredients.find(ingredient => selectedIngredient === ingredient.name),
         mass: Number(selectMass.value)
     });
     const newIngredientId = selected[selected.length - 1].id;
     container.insertAdjacentHTML('beforeend', `
         <div class="selected" id="${newIngredientId}">
-            ${selectIngredient.value}: ${Number(selectMass.value)} 
+            ${selectedIngredient}: ${Number(selectMass.value)} 
             <span data-delete="${newIngredientId}" class="material-icons md-18 deliter">
                 close
             </span>
@@ -55,29 +58,34 @@ function isAllRecipes(suitable, recipes) {
     }
 }
 function setRecipeOpening(recipeContainers) {
+    const body = document.getElementsByTagName('body');
     recipeContainers.forEach(recipeContainer => {
+        const recipe = document.getElementById('recipe' + recipeContainer.getAttribute('data-index'));
         recipeContainer.addEventListener('click', (e) => {
-            if (recipeContainer.getAttribute('class') === 'recipe') {
-                recipeContainer.classList.add('height0');
-                setTimeout(() => {
-                    recipeContainer.classList.add('open');
-                }, 200);
-            } else if (
-                e.target.getAttribute('class') === 'recipe_exit' ||
-                e.target.parentElement.getAttribute('class') === 'recipe_exit'
-            ) {
-                recipeContainer.classList.remove('open');
-                recipeContainer.classList.remove('height0');
-            }
+            // if (
+            //     e.target.getAttribute('class') === 'recipe_exit' ||
+            //     e.target.parentElement.getAttribute('class') === 'recipe_exit'
+            // ) {
+            //     recipeContainer.classList.remove('open');
+            // }
+            recipe.classList.add('open');
+            body[0].classList.add('noscroll');
         })
+        const closeRecipe = recipe.firstElementChild.firstElementChild;
+        closeRecipe.addEventListener('click', () => {
+            recipe.classList.remove('open');
+            body[0].classList.remove('noscroll');
+        });
     });
 }
 function setRandomRecipeOpening() {
     const openRandomRecipe = document.getElementById('random');
+    const body = document.getElementsByTagName('body');
     openRandomRecipe.addEventListener('click', () => {
         loadRandomRecipe();
         const recipeContainer = document.getElementById('random_recipe');
         recipeContainer.classList.add('open');
+        body[0].classList.add('noscroll');
     });
 }
 async function loadRandomRecipe() {

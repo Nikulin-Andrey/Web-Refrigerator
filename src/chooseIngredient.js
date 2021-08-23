@@ -4,7 +4,7 @@ import {cleanInputs, isCorrectInputs, addIngredient} from './secondaryFunctions.
 
 export default function chooseIngredient(ingredients, recipes) {
     renderDropDownIngredientList(ingredients);
-    const recipesContainer = document.getElementById('recipes_container');
+    const recipesContainer = document.getElementById('recipes_container_slider');
     const showAll = document.getElementById('show_all');
     const selectIngredient = document.getElementById('selected_ingredient');
     const selectMass = document.getElementById('mass');
@@ -13,22 +13,43 @@ export default function chooseIngredient(ingredients, recipes) {
     const buttonFind = document.getElementById('find');
     buttonFind.addEventListener('click', function () {
         getSuitableRecipes(selected, recipes);
+        window.scrollTo({
+            top: recipesContainer.parentElement.parentElement.offsetTop,
+            left: 0,
+            behavior: 'smooth'
+          });
     });
     showAll.addEventListener('click', function() {
+        const notFind = document.getElementById('not_find')
+        if(notFind) {
+            notFind.remove();
+        }
         recipesContainer.innerHTML = '';
         renderRecipes(recipes, ingredients);
         showAll.classList.add('hide');
     });
     buttonFind.classList.add('hide');
-    const container = document.getElementById('selected_ingredients');
+    const ingredientsContainer = document.getElementById('selected_ingredients');
     buttonAdd.addEventListener('click', function () {
         if (!isCorrectInputs(selected, selectIngredient, selectMass, ingredients)) {
             cleanInputs(selectMass, selectIngredient);
             return;
         }
-        addIngredient(selected, ingredients, selectMass, container, selectIngredient, buttonFind);
+        addIngredient(selected, ingredients, selectMass, ingredientsContainer, selectIngredient, buttonFind);
     });
-    container.addEventListener('click', function (e) {
+    selectIngredient.addEventListener('keypress', function(e) {
+        if(e.code === 'Enter'){
+            selectMass.focus();
+        }
+    });
+    selectMass.addEventListener('keypress', function(e) {
+        if(e.code === 'Enter'){
+            const click = new Event('click');
+            buttonAdd.dispatchEvent(click);
+            selectIngredient.focus();
+        }
+    });
+    ingredientsContainer.addEventListener('click', function (e) {
         if (e.target.hasAttribute('data-delete')) {
             const targetIngredientId = Number(e.target.getAttribute('data-delete'));
             const index = selected.findIndex(ingredient => ingredient.id === targetIngredientId);
