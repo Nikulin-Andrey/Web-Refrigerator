@@ -1,51 +1,20 @@
-import { setRecipeOpening, loadRandomRecipe } from './secondaryFunctions.js';
-import Swiper from 'swiper';
-import SwiperCore, { Navigation, Pagination } from 'swiper/core';
-import 'swiper/swiper-bundle.css';
+import { setRecipeOpening, loadRandomRecipe } from './recipesFunctions.js';
+import { getRecipeSlideHtml, getRecipeContentHtml } from './htmlGetFunctions';
+import setSlider from './setSlider.js';
 
 function renderRecipes(recipes, allIngredients, suitable = true) {
     const sliderRecipesContainer = document.getElementById('recipes_container_slider');
     const recipesContainer = document.getElementById('recipes_container');
     recipesContainer.innerHTML = '';
     if (recipes.length > 0) {
+        const randomRecipe = false;
         recipes.forEach(function (recipe, index) {
-            sliderRecipesContainer.insertAdjacentHTML('beforeend', `
-        <div class="recipe_slide swiper-slide">
-            <div class="slide_recipe_content" data-index="${index}">
-                <h3>${recipe.name}${suitable ? '' : '<br><span>Немного не подходит</span>'}</h3>
-                <div class="slide_recipe_image_container">
-                    <img src="${recipe.img}">
-                </div>
-            </div>
-        </div>
-        `);
+            sliderRecipesContainer.insertAdjacentHTML('beforeend', getRecipeSlideHtml(index, recipe.name, recipe.img, suitable));
             recipesContainer.insertAdjacentHTML('beforeend', `
-        <div class="recipe" id="recipe${index}">
-            <div class="recipe_content">
-                <div class="recipe_exit">
-                    <img src="img/arrow.svg" alt="exit_recipe" class="arrow">
+                <div class="recipe" id="recipe${index}">
+                    ${getRecipeContentHtml(recipe.name, recipe.img, recipe.description, randomRecipe, index)}
                 </div>
-                <div class="recipe_info">
-                    <div class="recipe_info_left_content">
-                        <h3>${recipe.name}</h3>
-                        <div class="recipe_image_container">
-                            <img src="${recipe.img}">
-                        </div>
-                        <div class="ingredients_info">
-                            <div id="ingredients_container_${index}">
-                                <h3>Ингредиенты:</h3>
-                                <ul></ul>
-                            </div>
-                        </div>
-                    </div>  
-                    <div class="recipe_info_right_content">
-                        <h3>Рецепт</h3>
-                        <p>${recipe.description}</p>
-                    </div>
-                </div> 
-            </div>
-        </div>
-        `);
+            `);
             const ingredientsContainer = document.getElementById(`ingredients_container_${index}`);
             recipe.ingredients.forEach(recipeIngredient => {
                 const rightIngredient = allIngredients.find(ingredient => ingredient.id === recipeIngredient.id);
@@ -57,33 +26,20 @@ function renderRecipes(recipes, allIngredients, suitable = true) {
         const recipeContainers = container.querySelectorAll('.slide_recipe_content');
         setRecipeOpening(recipeContainers);
     } else {
-        const oldNotFind = document.getElementById('not_find');
-        if(!oldNotFind) {
-            const notFind = document.createElement('div');
-            notFind.setAttribute('id', 'not_find');
-            notFind.innerHTML = '<h2>Ничего не найдено</h2>';
-            const showAll = document.getElementById('show_all').parentElement;
-            showAll.parentNode.insertBefore(notFind, showAll);
-        }
+        renderNotFound();
     }
-    SwiperCore.use([Navigation, Pagination]);
-    const swiper = new Swiper('.swiper-container', {
-        loop: false,
-        slidesPerView: 3,
-        spaceBetween: 30,
+    setSlider();
+}
 
-        // If we need pagination
-        pagination: {
-            el: '.swiper-pagination',
-            clickable: true
-        },
-
-        // Navigation arrows
-        navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-        },
-    });
+function renderNotFound() {
+    const oldNotFound = document.getElementById('not_find');
+    if (!oldNotFound) {
+        const notFound = document.createElement('div');
+        notFound.setAttribute('id', 'not_found');
+        notFound.innerHTML = '<h2>Ничего не найдено</h2>';
+        const showAll = document.getElementById('show_all').parentElement;
+        showAll.parentNode.insertBefore(notFound, showAll);
+    }
 }
 function renderDropDownIngredientList(ingredients) {
     const list = document.getElementById('ingredient_selection');
@@ -95,40 +51,13 @@ function renderDropDownIngredientList(ingredients) {
 }
 function renderRandomRecipes(recipe) {
     const container = document.getElementById('random_recipe');
-    const body = document.getElementsByTagName('body');
+    const body = document.body;
+    const randomRecipe = true;
+    const recipeName = recipe.meals[0].strMeal;
+    const recipeImg = recipe.meals[0].strMealThumb;
+    const recipeDescription = recipe.meals[0].strInstructions;
     container.innerHTML = '';
-    container.insertAdjacentHTML('beforeend', `
-    <div class="recipe_content">
-                <div class="recipe_header">
-                    <div class="recipe_exit">
-                        <img src="img/arrow.svg" alt="exit_recipe" class="arrow">
-                    </div>
-                    <div class="recipe_reload">
-                        <span class="material-icons md-48">
-                        autorenew
-                        </span>
-                    </div>
-                </div>
-                <div class="recipe_info">
-                    <div class="recipe_info_left_content">
-                        <h3>${recipe.meals[0].strMeal}</h3>
-                        <div class="recipe_image_container">
-                            <img src="${recipe.meals[0].strMealThumb}">
-                        </div>
-                        <div class="ingredients_info">
-                            <div id="ingredients_container_random">
-                                <h3>Ингредиенты:</h3>
-                                <ul></ul>
-                            </div>
-                        </div>
-                    </div>  
-                    <div class="recipe_info_right_content">
-                        <h3>Рецепт</h3>
-                        <p>${recipe.meals[0].strInstructions}</p>
-                    </div>
-                </div> 
-            </div>    
-    `);
+    container.insertAdjacentHTML('beforeend', getRecipeContentHtml(recipeName, recipeImg, recipeDescription, randomRecipe));
     const maxIngredients = 20;
     const ingredientsContainer = document.getElementById('ingredients_container_random').lastElementChild;
     const closeRecipe = container.querySelector('.recipe_exit');
@@ -142,7 +71,7 @@ function renderRandomRecipes(recipe) {
     }
     closeRecipe.addEventListener('click', () => {
         container.classList.remove('open');
-        body[0].classList.remove('noscroll');
+        body.classList.remove('noscroll');
     });
     reloadRecipe.addEventListener('click', loadRandomRecipe);
 }

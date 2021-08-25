@@ -1,5 +1,5 @@
-import {renderRecipes} from './renderFunctions.js';
-import {isAllRecipes} from './secondaryFunctions.js';
+import { renderRecipes } from './renderFunctions.js';
+import { isAllRecipes } from './recipesFunctions.js';
 
 export default function getSuitableRecipes(selectedIngredients, recipes) {
     const container = document.getElementById('recipes_container_slider');
@@ -16,14 +16,13 @@ export default function getSuitableRecipes(selectedIngredients, recipes) {
                 suitable = false;
                 exactleSuitable = false;
                 return;
-            } else {
-                if (ingredient.mass < recipeIngredient.mass) {
-                    suitable = false;
-                    if (ingredient.mass < recipeIngredient.mass * 0.75) {
-                        exactleSuitable = false;
-                    }
-                    return;
+            }
+            if (ingredient.mass < recipeIngredient.mass) {
+                suitable = false;
+                if (ingredient.mass < recipeIngredient.mass * 0.75) {
+                    exactleSuitable = false;
                 }
+                return;
             }
         });
         if (suitable) {
@@ -32,9 +31,9 @@ export default function getSuitableRecipes(selectedIngredients, recipes) {
         if (exactleSuitable && !suitable) {
             exactleSuitableRecipes.push(recipe);
         }
-    })
+    });
     container.innerHTML = '';
-    if(suitableRecipes.length > 0) {
+    if (suitableRecipes.length > 0) {
         suitable = true;
         renderRecipes(suitableRecipes, selectedIngredients, suitable);
     }
@@ -42,7 +41,7 @@ export default function getSuitableRecipes(selectedIngredients, recipes) {
         suitable = false;
         renderRecipes(exactleSuitableRecipes, selectedIngredients, suitable);
     }
-    if(suitableRecipes.length === 0 && exactleSuitableRecipes.length === 0) {
+    if (suitableRecipes.length === 0 && exactleSuitableRecipes.length === 0) {
         renderRecipes(suitableRecipes, selectedIngredients, suitable);
     }
     isAllRecipes(suitableRecipes, recipes);

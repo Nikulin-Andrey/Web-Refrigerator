@@ -1,6 +1,6 @@
 import {renderRecipes} from './renderFunctions.js';
 import chooseIngredient from './chooseIngredient.js';
-import {setRandomRecipeOpening} from './secondaryFunctions';
+import {setRandomRecipeOpening} from './recipesFunctions';
 import loadJSON from './loadJSON';
 
 

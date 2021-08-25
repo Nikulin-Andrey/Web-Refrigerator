@@ -1,6 +1,7 @@
-import {renderDropDownIngredientList, renderRecipes} from './renderFunctions.js';
+import { renderDropDownIngredientList, renderRecipes } from './renderFunctions.js';
 import getSuitableRecipes from './getSuitableRecipes.js';
-import {cleanInputs, isCorrectInputs, addIngredient} from './secondaryFunctions.js';
+import { scrollToRecipes } from './recipesFunctions.js';
+import { cleanInputs, isCorrectInputs, addIngredient } from './ingredientsFunctions.js'
 
 export default function chooseIngredient(ingredients, recipes) {
     renderDropDownIngredientList(ingredients);
@@ -13,16 +14,12 @@ export default function chooseIngredient(ingredients, recipes) {
     const buttonFind = document.getElementById('find');
     buttonFind.addEventListener('click', function () {
         getSuitableRecipes(selected, recipes);
-        window.scrollTo({
-            top: recipesContainer.parentElement.parentElement.offsetTop,
-            left: 0,
-            behavior: 'smooth'
-          });
+        scrollToRecipes(recipesContainer.parentElement.parentElement.offsetTop);
     });
-    showAll.addEventListener('click', function() {
-        const notFind = document.getElementById('not_find')
-        if(notFind) {
-            notFind.remove();
+    showAll.addEventListener('click', function () {
+        const notFound = document.getElementById('not_found')
+        if (notFound) {
+            notFound.remove();
         }
         recipesContainer.innerHTML = '';
         renderRecipes(recipes, ingredients);
@@ -37,13 +34,13 @@ export default function chooseIngredient(ingredients, recipes) {
         }
         addIngredient(selected, ingredients, selectMass, ingredientsContainer, selectIngredient, buttonFind);
     });
-    selectIngredient.addEventListener('keypress', function(e) {
-        if(e.code === 'Enter'){
+    selectIngredient.addEventListener('keypress', function (e) {
+        if (e.code === 'Enter') {
             selectMass.focus();
         }
     });
-    selectMass.addEventListener('keypress', function(e) {
-        if(e.code === 'Enter'){
+    selectMass.addEventListener('keypress', function (e) {
+        if (e.code === 'Enter') {
             const click = new Event('click');
             buttonAdd.dispatchEvent(click);
             selectIngredient.focus();
