@@ -22,6 +22,7 @@ function isCorrectInputs(selected, selectIngredient, selectMass, ingredients) {
         return false;
     }
     if (Number(selectMass.value) === 0) {
+        alert(`0 грамм`);
         return false;
     }
     return true;

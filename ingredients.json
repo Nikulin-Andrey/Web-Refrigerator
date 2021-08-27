@@ -104,5 +104,19 @@
         "fats": 20,
         "carbohydrates": 8,
         "kcal": 200
+    }, {
+        "id": 15,
+        "name": "сыр",
+        "proteins": 23.2,
+        "fats": 29.5,
+        "carbohydrates": 0,
+        "kcal": 364
+    }, {
+        "id": 16,
+        "name": "мука",
+        "proteins": 12.7,
+        "fats": 2,
+        "carbohydrates": 69.5,
+        "kcal": 350
     }
 ]
