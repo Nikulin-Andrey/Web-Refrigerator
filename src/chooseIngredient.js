@@ -5,7 +5,8 @@ import { cleanInputs, isCorrectInputs, addIngredient } from './ingredientsFuncti
 
 export default function chooseIngredient(ingredients, recipes) {
     renderDropDownIngredientList(ingredients);
-    const recipesContainer = document.getElementById('recipes_container_slider');
+    const recipesContainerSlider = document.getElementById('recipes_container_slider');
+    const recipesContainer = document.getElementById('recipes_container');
     const showAll = document.getElementById('show_all');
     const selectIngredient = document.getElementById('selected_ingredient');
     const selectMass = document.getElementById('mass');
@@ -14,13 +15,14 @@ export default function chooseIngredient(ingredients, recipes) {
     const buttonFind = document.getElementById('find');
     buttonFind.addEventListener('click', function () {
         getSuitableRecipes(selected, recipes);
-        scrollToRecipes(recipesContainer.parentElement.parentElement.offsetTop);
+        scrollToRecipes(recipesContainerSlider.parentElement.parentElement.offsetTop);
     });
     showAll.addEventListener('click', function () {
         const notFound = document.getElementById('not_found')
         if (notFound) {
             notFound.remove();
         }
+        recipesContainerSlider.innerHTML = '';
         recipesContainer.innerHTML = '';
         renderRecipes(recipes, ingredients);
         showAll.classList.add('hide');

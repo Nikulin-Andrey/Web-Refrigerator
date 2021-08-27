@@ -3,6 +3,7 @@ import { isAllRecipes } from './recipesFunctions.js';
 
 export default function getSuitableRecipes(selectedIngredients, recipes) {
     const container = document.getElementById('recipes_container_slider');
+    const recipesContainer = document.getElementById('recipes_container');
     const suitableRecipes = [], exactleSuitableRecipes = [];
     let ingredient = {},
         suitable = true,
@@ -33,6 +34,7 @@ export default function getSuitableRecipes(selectedIngredients, recipes) {
         }
     });
     container.innerHTML = '';
+    recipesContainer.innerHTML = '';
     if (suitableRecipes.length > 0) {
         suitable = true;
         renderRecipes(suitableRecipes, selectedIngredients, suitable);

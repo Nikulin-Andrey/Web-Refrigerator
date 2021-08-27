@@ -5,17 +5,16 @@ import setSlider from './setSlider.js';
 function renderRecipes(recipes, allIngredients, suitable = true) {
     const sliderRecipesContainer = document.getElementById('recipes_container_slider');
     const recipesContainer = document.getElementById('recipes_container');
-    recipesContainer.innerHTML = '';
-    if (recipes.length > 0) {
+    if (recipes.length > 0) { 
         const randomRecipe = false;
         recipes.forEach(function (recipe, index) {
             sliderRecipesContainer.insertAdjacentHTML('beforeend', getRecipeSlideHtml(index, recipe.name, recipe.img, suitable));
             recipesContainer.insertAdjacentHTML('beforeend', `
-                <div class="recipe" id="recipe${index}">
-                    ${getRecipeContentHtml(recipe.name, recipe.img, recipe.description, randomRecipe, index)}
+                <div class="recipe" id="recipe${suitable? index : index + 'exect'}">
+                    ${getRecipeContentHtml(recipe.name, recipe.img, recipe.description, randomRecipe, index, suitable)}
                 </div>
             `);
-            const ingredientsContainer = document.getElementById(`ingredients_container_${index}`);
+            const ingredientsContainer = document.getElementById(`ingredients_container_${suitable? index : index + 'exect'}`);
             recipe.ingredients.forEach(recipeIngredient => {
                 const rightIngredient = allIngredients.find(ingredient => ingredient.id === recipeIngredient.id);
                 ingredientsContainer.lastElementChild.insertAdjacentHTML('beforeend', `
